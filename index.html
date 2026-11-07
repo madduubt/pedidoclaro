@@ -3,138 +3,205 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>PEDIDO CLARO — Organiza tus Pedidos y Ventas</title>
+<title>Pedido Claro — Panel de pedidos y ventas</title>
+<meta name="description" content="Panel en Excel y Google Sheets para organizar pedidos, cobros y entregas de tu negocio. Pago único de US$ 10.">
 <style>
-:root{--bg:#ffffff;--card:#ffffff;--text:#12263f;--muted:#51647c;--brand:#ff7a1a;--brand-d:#e56300;--accent:#1d6fe0;--line:#dbe6f5;--hero:#eaf3ff;--on-brand:#ffffff;color-scheme:light}
+:root{--bg:#fbfaf6;--card:#ffffff;--fg:#1c2420;--muted:#5d6b64;--line:#e3e1d8;--accent:#15795a;--accent-ink:#ffffff;--soft:#e8f3ee;--warn-bg:#fdf0d5;--warn-fg:#8a5a00;--info-bg:#e3edfb;--info-fg:#1f4f9a;--ok-bg:#dff3e7;--ok-fg:#14683f;--bad-bg:#fbe4e1;--bad-fg:#9b2c20}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){color-scheme:dark;--bg:#111815;--card:#18211d;--fg:#eaf1ed;--muted:#a3b2aa;--line:#2a372f;--accent:#3fcf9b;--accent-ink:#06261a;--soft:#17302a;--warn-bg:#3a2e12;--warn-fg:#f2c56b;--info-bg:#172c47;--info-fg:#9cc2f5;--ok-bg:#16351f;--ok-fg:#7fdca1;--bad-bg:#3d1f1b;--bad-fg:#f2a399}}
+:root[data-theme="dark"]{color-scheme:dark;--bg:#111815;--card:#18211d;--fg:#eaf1ed;--muted:#a3b2aa;--line:#2a372f;--accent:#3fcf9b;--accent-ink:#06261a;--soft:#17302a;--warn-bg:#3a2e12;--warn-fg:#f2c56b;--info-bg:#172c47;--info-fg:#9cc2f5;--ok-bg:#16351f;--ok-fg:#7fdca1;--bad-bg:#3d1f1b;--bad-fg:#f2a399}
 :root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+html{scroll-padding-top:env(safe-area-inset-top,0px);scroll-behavior:smooth}
 *,*::before,*::after{box-sizing:inherit}
-html{scroll-behavior:smooth}
-body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;line-height:1.6}
+body{margin:0;background:var(--bg);color:var(--fg);font:17px/1.6 system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;-webkit-font-smoothing:antialiased}
 .wrap{max-width:960px;margin:0 auto;padding:0 20px}
 section{padding:56px 0}
-h1{font-size:clamp(2rem,6vw,3.2rem);line-height:1.1;margin:0 0 16px;letter-spacing:-.02em}
-h2{font-size:clamp(1.5rem,4vw,2.1rem);margin:0 0 28px;text-align:center}
-p{margin:0 0 14px}
-h1,h2{color:#12418a}
-.hero{background:linear-gradient(180deg,#eaf3ff,#ffffff);text-align:center;padding:64px 0 56px}
-.tag{display:inline-block;background:var(--brand);color:var(--on-brand);font-weight:700;font-size:.8rem;letter-spacing:.08em;padding:6px 14px;border-radius:99px;margin-bottom:18px}
-.hero p.lead{font-size:1.15rem;color:var(--muted);max-width:640px;margin:0 auto 14px}
-.btn{display:inline-block;background:var(--brand);color:var(--on-brand);font-weight:700;font-size:1.1rem;padding:16px 34px;border-radius:12px;text-decoration:none;margin-top:14px;box-shadow:0 6px 18px rgba(255,122,26,.35)}
-.btn:hover{background:var(--brand-d)}
-.grid{display:grid;gap:18px;grid-template-columns:repeat(auto-fit,minmax(240px,1fr))}
-.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:24px}
-.card .ico{font-size:2rem}
-.card h3{margin:8px 0;font-size:1.15rem}
-.card p{color:var(--muted);margin:0}
-.bonus{background:var(--card);border:2px dashed var(--accent);border-radius:16px;padding:28px}
-.bonus h2{margin-bottom:18px}
-ul{margin:0;padding:0;list-style:none}
-li{padding:8px 0 8px 32px;position:relative}
-.bonus li::before{content:"🎁";position:absolute;left:0}
-.who li::before{content:"✔";position:absolute;left:4px;color:var(--brand);font-weight:700}
-.why li::before{content:"✅";position:absolute;left:0}
-.cols{display:grid;gap:32px;grid-template-columns:repeat(auto-fit,minmax(280px,1fr))}
-.cols h2{text-align:left}
-.price-box{background:var(--card);border:2px solid var(--brand);border-radius:20px;max-width:460px;margin:0 auto;padding:36px 28px;text-align:center}
-.price-box small{color:var(--accent);font-weight:700;letter-spacing:.08em}
-.price{font-size:3.4rem;font-weight:800;color:var(--brand);line-height:1.1;margin:6px 0 16px}
-.price-box ul{text-align:left;display:inline-block;margin-bottom:8px}
-.price-box li::before{content:"✔";position:absolute;left:4px;color:var(--brand);font-weight:700}
-footer{text-align:center;padding:40px 20px 56px;border-top:1px solid var(--line)}
-footer strong{font-size:1.3rem;letter-spacing:.05em}
-footer p{color:var(--muted);margin:6px 0 0}
+h1,h2,h3{line-height:1.2;margin:0 0 .5em;letter-spacing:-.01em}
+h1{font-size:clamp(30px,6.4vw,50px)}
+h2{font-size:clamp(24px,4.6vw,34px);text-align:center}
+h3{font-size:18px}
+p{margin:0 0 1em}
+.eyebrow{display:inline-block;background:var(--soft);color:var(--accent);font-weight:600;font-size:14px;padding:6px 14px;border-radius:99px;margin-bottom:18px}
+.lead{font-size:19px;color:var(--muted);max-width:640px}
+.btn{display:inline-block;background:var(--accent);color:var(--accent-ink);font-weight:700;font-size:18px;text-decoration:none;padding:16px 28px;border-radius:12px;text-align:center;box-shadow:0 6px 18px rgba(21,121,90,.25);transition:transform .15s}
+.btn:hover{transform:translateY(-2px)}
+.btn:focus-visible,summary:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
+.fine{font-size:14px;color:var(--muted);margin-top:12px}
+.hero{padding-top:44px;text-align:center}
+.hero .lead{margin:0 auto 26px}
+.mock{margin:40px auto 0;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;box-shadow:0 20px 50px rgba(0,0,0,.08);text-align:left}
+.kpis{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:14px}
+.kpi{background:var(--soft);border-radius:10px;padding:10px 12px}
+.kpi b{display:block;font-size:22px;line-height:1.2}
+.kpi span{font-size:13px;color:var(--muted)}
+.scroll{overflow-x:auto}
+table{border-collapse:collapse;width:100%;min-width:560px;font-size:14px}
+th{background:var(--accent);color:var(--accent-ink);text-align:left;padding:8px 10px;font-weight:600;white-space:nowrap}
+td{padding:9px 10px;border-bottom:1px solid var(--line);white-space:nowrap}
+.pill{display:inline-block;padding:2px 10px;border-radius:99px;font-size:12.5px;font-weight:600}
+.p-ok{background:var(--ok-bg);color:var(--ok-fg)}.p-warn{background:var(--warn-bg);color:var(--warn-fg)}.p-info{background:var(--info-bg);color:var(--info-fg)}.p-bad{background:var(--bad-bg);color:var(--bad-fg)}
+.cap{font-size:13px;color:var(--muted);margin:10px 0 0;text-align:center}
+.grid{display:grid;gap:16px;margin-top:32px}
+.g2{grid-template-columns:1fr}.g3{grid-template-columns:1fr}
+@media(min-width:700px){.g2{grid-template-columns:repeat(2,1fr)}.g3{grid-template-columns:repeat(3,1fr)}.kpis{grid-template-columns:repeat(4,1fr)}}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:22px}
+.card p{margin:0;color:var(--muted);font-size:16px}
+.ico{font-size:26px;display:block;margin-bottom:8px}
+.alt{background:var(--soft)}
+.pain{list-style:none;padding:0;margin:28px auto 0;max-width:640px}
+.pain li{padding:14px 0 14px 34px;border-bottom:1px solid var(--line);position:relative}
+.pain li::before{content:"✕";position:absolute;left:0;top:14px;color:var(--bad-fg);font-weight:700}
+.turn{text-align:center;font-size:20px;font-weight:600;max-width:640px;margin:28px auto 0}
+.step{counter-increment:s}
+.step::before{content:counter(s);display:inline-grid;place-items:center;width:36px;height:36px;border-radius:50%;background:var(--accent);color:var(--accent-ink);font-weight:700;margin-bottom:10px}
+.steps{counter-reset:s}
+.checks{list-style:none;padding:0;margin:0}
+.checks li{padding:6px 0 6px 28px;position:relative}
+.checks li::before{content:"✓";position:absolute;left:0;color:var(--accent);font-weight:700}
+.bonus{border:2px dashed var(--accent);border-radius:14px;padding:22px;background:var(--card)}
+.tag{display:inline-block;background:var(--accent);color:var(--accent-ink);font-size:12px;font-weight:700;padding:3px 10px;border-radius:99px;margin-bottom:8px}
+.offer{max-width:460px;margin:30px auto 0;text-align:center;background:var(--card);border:2px solid var(--accent);border-radius:20px;padding:32px 24px}
+.price{font-size:56px;font-weight:800;line-height:1;margin:6px 0 4px}
+.price small{font-size:20px;font-weight:600;color:var(--muted)}
+.offer .checks{text-align:left;display:inline-block;margin:18px 0 22px}
+.guar{display:flex;gap:18px;align-items:center;max-width:720px;margin:0 auto;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:24px}
+.guar .ico{font-size:44px;margin:0}
+.guar p{margin:0;color:var(--muted)}
+details{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:0 18px;margin-bottom:10px}
+summary{cursor:pointer;font-weight:600;padding:16px 0;list-style:none;display:flex;justify-content:space-between;gap:12px}
+summary::after{content:"+";color:var(--accent);font-size:22px;line-height:1}
+details[open] summary::after{content:"–"}
+details p{color:var(--muted);padding-bottom:6px}
+.faq{max-width:720px;margin:30px auto 0}
+footer{padding:32px 0 48px;text-align:center;font-size:14px;color:var(--muted);border-top:1px solid var(--line)}
+@media(max-width:560px){.guar{flex-direction:column;text-align:center}.btn{width:100%}}
 </style>
 </head>
 <body>
 
-<header class="hero">
-  <div class="wrap">
-    <span class="tag">PEDIDO CLARO</span>
-    <h1>Organiza tus Pedidos y Ventas</h1>
-    <p class="lead">¿Vendes por WhatsApp, Instagram o mensajes y sientes que cada vez es más difícil mantener todo organizado?</p>
-    <p class="lead">Con PEDIDO CLARO puedes organizar los pedidos de tus clientes, registrar pagos, controlar entregas y tener la información de tu negocio en un solo lugar.</p>
-    <a class="btn" href="https://pay.kiwify.com/nQRk9cM" target="_blank" rel="noopener">¡Quiero mi Pedido Claro!</a>
-  </div>
-</header>
+<header class="hero"><div class="wrap">
+  <span class="eyebrow">Para negocios que venden por WhatsApp e Instagram</span>
+  <h1>Deja de buscar en tus chats quién pidió qué y quién todavía no pagó</h1>
+  <p class="lead">Pedido Claro es un panel en Excel y Google Sheets para registrar pedidos, cobros y entregas en un solo lugar. Lo abres, anotas el pedido y listo.</p>
+  <a class="btn" href="https://pay.kiwify.com/nQRk9cM">Quiero mi Pedido Claro · US$ 10</a>
+  <p class="fine">Pago único · Sin mensualidades · Garantía de 7 días</p>
 
-<section>
-  <div class="wrap" style="text-align:center;max-width:680px">
-    <p style="font-size:1.2rem">Olvídate de buscar conversaciones antiguas para recordar qué pidió cada cliente o quién todavía tiene un pago pendiente.</p>
-  </div>
-</section>
-
-<section style="padding-top:0">
-  <div class="wrap">
-    <h2>¿Qué incluye?</h2>
-    <div class="grid">
-      <div class="card"><div class="ico">📊</div><h3>Panel de Pedidos y Ventas</h3><p>Organiza tus pedidos, productos, clientes, pagos, entregas y gastos mediante una hoja de cálculo práctica y editable.</p></div>
-      <div class="card"><div class="ico">📘</div><h3>Manual de Utilización</h3><p>Aprende a utilizar cada sección del panel con instrucciones sencillas.</p></div>
-      <div class="card"><div class="ico">🚀</div><h3>Guía Empieza Aquí</h3><p>Comienza a organizar tu negocio con una guía rápida de cinco minutos.</p></div>
+  <div class="mock" role="img" aria-label="Vista del panel de pedidos con indicadores y una tabla de pedidos de ejemplo">
+    <div class="kpis">
+      <div class="kpi"><b>4</b><span>Pedidos registrados</span></div>
+      <div class="kpi"><b>US$ 97</b><span>Importe total</span></div>
+      <div class="kpi"><b>2</b><span>Pendientes de pago</span></div>
+      <div class="kpi"><b>US$ 15</b><span>Gastos registrados</span></div>
     </div>
+    <div class="scroll"><table>
+      <thead><tr><th>ID</th><th>Cliente</th><th>Producto</th><th>Cant.</th><th>Total</th><th>Entrega</th><th>Pago</th></tr></thead>
+      <tbody>
+        <tr><td>PC-0001</td><td>Lucía</td><td>Pastel de zanahoria</td><td>2</td><td>US$ 26</td><td><span class="pill p-info">En preparación</span></td><td><span class="pill p-warn">Parcial</span></td></tr>
+        <tr><td>PC-0002</td><td>Marco</td><td>Combo familiar</td><td>1</td><td>US$ 18</td><td><span class="pill p-info">Confirmado</span></td><td><span class="pill p-bad">Pendiente</span></td></tr>
+        <tr><td>PC-0003</td><td>Andrea</td><td>Caja de galletas</td><td>3</td><td>US$ 39</td><td><span class="pill p-ok">Entregado</span></td><td><span class="pill p-ok">Pagado</span></td></tr>
+        <tr><td>PC-0004</td><td>Diego</td><td>Pastel de zanahoria</td><td>1</td><td>US$ 14</td><td><span class="pill p-info">Listo</span></td><td><span class="pill p-ok">Pagado</span></td></tr>
+      </tbody>
+    </table></div>
+    <p class="cap">Ejemplo ilustrativo de cómo se ve el panel</p>
   </div>
-</section>
+</div></header>
 
-<section style="padding-top:0">
-  <div class="wrap">
-    <div class="bonus">
-      <h2>🎁 BONOS INCLUIDOS</h2>
-      <ul>
-        <li>Ficha de pedidos y políticas comerciales.</li>
-        <li>Rutina de cierre diario para mantener todo actualizado.</li>
-        <li>Mensajes preparados para atender y dar seguimiento a tus clientes.</li>
-      </ul>
-    </div>
+<section class="alt"><div class="wrap">
+  <h2>¿Te suena familiar?</h2>
+  <ul class="pain">
+    <li>Recorres decenas de conversaciones para recordar qué encargó una clienta.</li>
+    <li>Entregas a tiempo… pero no recuerdas si ya te pagó.</li>
+    <li>Al cerrar el día no sabes cuánto vendiste ni cuánto te deben.</li>
+    <li>Cada pedido vive en un lugar distinto: chat, nota, papel.</li>
+  </ul>
+  <p class="turn">Con Pedido Claro cada pedido tiene su fila, su estado de entrega y su estado de pago.</p>
+</div></section>
+
+<section><div class="wrap">
+  <h2>Lo que encuentras dentro del panel</h2>
+  <div class="grid g3">
+    <div class="card"><span class="ico">🏷️</span><h3>Catálogo</h3><p>Registra productos, costo y precio de venta. El margen unitario y el porcentaje se calculan solos.</p></div>
+    <div class="card"><span class="ico">🧾</span><h3>Pedidos</h3><p>Una fila por pedido: cliente, WhatsApp, producto, cantidad, envío y canal. Subtotal y total a cobrar automáticos.</p></div>
+    <div class="card"><span class="ico">🚚</span><h3>Estados de entrega y pago</h3><p>Nuevo, Confirmado, En preparación, Listo, Entregado o Cancelado. Y Pendiente, Parcial o Pagado.</p></div>
+    <div class="card"><span class="ico">👥</span><h3>Clientes</h3><p>Base con contacto, zona, primera y última compra, y notas de preferencias.</p></div>
+    <div class="card"><span class="ico">💸</span><h3>Gastos</h3><p>Anota empaques, transporte y otros gastos de tu operación en el mismo archivo.</p></div>
+    <div class="card"><span class="ico">📊</span><h3>Resumen del negocio</h3><p>Pedidos registrados, importe total, pagos pendientes y gastos, a la vista.</p></div>
   </div>
-</section>
+</div></section>
 
-<section>
-  <div class="wrap cols">
-    <div class="who">
-      <h2>¿Para quién es?</h2>
-      <ul>
-        <li>Pequeños emprendedores.</li>
-        <li>Tiendas y comercios.</li>
-        <li>Reposteros y vendedores de productos por encargo.</li>
-        <li>Negocios que reciben pedidos por WhatsApp.</li>
-        <li>Emprendedores que venden por Instagram.</li>
-      </ul>
-    </div>
-    <div class="why">
-      <h2>¿Por qué elegir Pedido Claro?</h2>
-      <ul>
-        <li>Organiza tus pedidos fácilmente.</li>
-        <li>Consulta los pagos pendientes.</li>
-        <li>Mantén los datos de tus clientes registrados.</li>
-        <li>Acompaña tus entregas.</li>
-        <li>Ahorra tiempo en tareas de organización.</li>
-        <li>Utiliza una herramienta práctica y editable.</li>
-      </ul>
-    </div>
+<section class="alt"><div class="wrap">
+  <h2>Empiezas en 5 minutos</h2>
+  <div class="grid g3 steps">
+    <div class="card step"><h3>Registra tus productos</h3><p>Escribe cada producto con su precio en la hoja Catálogo.</p></div>
+    <div class="card step"><h3>Anota cada pedido</h3><p>Una fila por pedido. Elige los estados de las listas desplegables.</p></div>
+    <div class="card step"><h3>Revisa al cerrar el día</h3><p>Mira el Resumen y sabrás qué entregar y a quién cobrar.</p></div>
   </div>
-</section>
+</div></section>
 
-<section id="comprar" style="background:var(--hero)">
-  <div class="wrap">
-    <h2>¡Consigue tu Pedido Claro hoy!</h2>
-    <div class="price-box">
-      <small>PRECIO ESPECIAL</small>
-      <div class="price">US$10</div>
-      <ul>
-        <li>Pago único.</li>
-        <li>Sin mensualidades.</li>
-        <li>Producto digital.</li>
-        <li>Acceso después de confirmar el pago.</li>
-      </ul>
-      <br>
-      <a class="btn" href="https://pay.kiwify.com/nQRk9cM" target="_blank" rel="noopener">¡Empieza hoy a organizar tu negocio!</a>
-    </div>
+<section><div class="wrap">
+  <h2>Todo lo que incluye</h2>
+  <div class="grid g3">
+    <div class="card"><span class="ico">📗</span><h3>Panel de Pedidos y Ventas</h3><p>Archivo editable con fórmulas listas para Excel y Google Sheets.</p></div>
+    <div class="card"><span class="ico">📘</span><h3>Manual de utilización</h3><p>Instrucciones sencillas para cada sección del panel.</p></div>
+    <div class="card"><span class="ico">🚀</span><h3>Guía «Empieza aquí»</h3><p>Una guía rápida de cinco minutos para comenzar hoy.</p></div>
   </div>
-</section>
+  <div class="bonus" style="margin-top:24px">
+    <span class="tag">🎁 BONOS INCLUIDOS</span>
+    <ul class="checks">
+      <li><b>Ficha de pedidos y políticas comerciales</b> para dejar claras tus condiciones.</li>
+      <li><b>Rutina de cierre diario</b> para mantener todo actualizado sin esfuerzo.</li>
+      <li><b>Mensajes preparados</b> para atender y dar seguimiento a tus clientes.</li>
+    </ul>
+  </div>
+</div></section>
 
-<footer>
-  <strong>PEDIDO CLARO</strong>
-  <p>Menos desorden. Más claridad. Más control sobre tus ventas.</p>
-</footer>
+<section class="alt"><div class="wrap">
+  <h2>¿Para quién es?</h2>
+  <div class="grid g2" style="max-width:720px;margin-left:auto;margin-right:auto">
+    <div class="card"><ul class="checks"><li>Pequeños emprendedores</li><li>Tiendas y comercios</li><li>Reposteros y vendedores por encargo</li></ul></div>
+    <div class="card"><ul class="checks"><li>Negocios que reciben pedidos por WhatsApp</li><li>Quienes venden por Instagram</li><li>Quien quiere orden sin pagar mensualidades</li></ul></div>
+  </div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="guar">
+    <span class="ico">🛡️</span>
+    <div><h3>Garantía de 7 días</h3><p>Pruébalo con tus pedidos reales. Si no es lo que esperabas, pide el reembolso dentro de los 7 días y te devolvemos tu dinero.</p></div>
+  </div>
+</div></section>
+
+<section class="alt" id="comprar"><div class="wrap">
+  <h2>Consigue tu Pedido Claro hoy</h2>
+  <div class="offer">
+    <span class="tag">PRECIO ESPECIAL</span>
+    <div class="price">US$ 10 <small>pago único</small></div>
+    <ul class="checks">
+      <li>Panel de Pedidos y Ventas</li>
+      <li>Manual y guía de inicio rápido</li>
+      <li>3 bonos incluidos</li>
+      <li>Sin mensualidades</li>
+      <li>Garantía de 7 días</li>
+    </ul>
+    <a class="btn" href="https://pay.kiwify.com/nQRk9cM">¡Empieza hoy a organizar tu negocio!</a>
+    <p class="fine">Producto digital. Recibes el acceso por correo en cuanto se confirma el pago.</p>
+  </div>
+</div></section>
+
+<section><div class="wrap">
+  <h2>Preguntas frecuentes</h2>
+  <div class="faq">
+    <details><summary>¿Funciona en Excel y en Google Sheets?</summary><p>Sí. Las fórmulas se recalculan en ambos programas.</p></details>
+    <details><summary>¿Necesito saber usar planillas?</summary><p>No. Incluye un manual con instrucciones sencillas y una guía de cinco minutos. Solo escribes sobre las celdas vacías y eliges los estados de las listas.</p></details>
+    <details><summary>¿Cómo recibo el producto?</summary><p>Después de confirmarse el pago recibes el acceso por correo electrónico.</p></details>
+    <details><summary>¿Puedo usarlo desde el celular?</summary><p>Puedes abrirlo con la app de Excel o de Google Sheets. Para registrar muchos pedidos suele ser más cómodo en computadora o tablet.</p></details>
+    <details><summary>¿Los pedidos de ejemplo se pueden borrar?</summary><p>Sí. Son de demostración. Borra esas filas, pero conserva las columnas con fórmulas, y guarda una copia maestra antes de editar.</p></details>
+    <details><summary>¿Sustituye un sistema contable?</summary><p>No. Es un sistema ligero para organizar pedidos, cobros y entregas; no sustituye un sistema contable ni fiscal.</p></details>
+  </div>
+  <p style="text-align:center;margin-top:28px"><a class="btn" href="https://pay.kiwify.com/nQRk9cM">Quiero mi Pedido Claro · US$ 10</a></p>
+</div></section>
+
+<footer><div class="wrap">
+  <b>PEDIDO CLARO</b><br>Menos desorden. Más claridad. Más control sobre tus ventas.
+</div></footer>
 
 </body>
 </html>
